@@ -31,12 +31,18 @@
         android:layout_height="1dip"
         android:background="@color/div_001" />
 
-    <TextView
-        android:id="@+id/pic_panel"
+    <fun.sure.any.keyboard.KeyboardHeightPanel
+        android:id="@+id/kh_panel"
         android:layout_width="match_parent"
-        android:layout_height="150dip"
-        android:gravity="center"
-        android:text="panel"
-        android:visibility="gone" />
+        android:layout_height="wrap_content"
+        android:visibility="gone">
 
+        <TextView
+            android:id="@+id/pic_panel"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="panel"/>
+
+    </fun.sure.any.keyboard.KeyboardHeightPanel>
 </merge>
