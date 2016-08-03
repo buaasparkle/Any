@@ -20,6 +20,10 @@
         <activity
             android:name=".keyboard.KeyboardTestActivity"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
+
+        <activity
+            android:name=".vector.VectorTestActivity"
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
     </application>
 
 </manifest>
