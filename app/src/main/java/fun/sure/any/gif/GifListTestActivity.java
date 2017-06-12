@@ -3,23 +3,22 @@ package fun.sure.any.gif;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView.RecyclerListener;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import fun.sure.any.R;
 import fun.sure.any.common.activity.BaseActivity;
+import pl.droidsonroids.gif.GifDrawable;
+import pl.droidsonroids.gif.GifImageView;
 
 /**
  * Created by wangshuo on 6/8/17.
@@ -45,6 +44,8 @@ public class GifListTestActivity extends BaseActivity {
             "https://media.giphy.com/media/3ohzdVLdumYpfcZnig/giphy.gif"
     };
 
+    private static final String GIF_ASSET_FORMAT = "200w_d_%d.gif";
+
     private ListView listView;
     private InnerAdapter adapter;
 
@@ -55,9 +56,16 @@ public class GifListTestActivity extends BaseActivity {
     }
 
     private void init() {
+        // GIF ASSET LIST
+        final List<String> GIF_ASSET_LIST = new ArrayList<>();
+        for (int i = 0; i < 8; i++) {
+            GIF_ASSET_LIST.add(String.format(GIF_ASSET_FORMAT, i));
+        }
+        // Gifs
         List<String> gifs = new ArrayList<>();
         for (int i = 0; i < 2; i++) {
-            gifs.addAll(Arrays.asList(GIF_LIST));
+//            gifs.addAll(Arrays.asList(GIF_LIST));
+            gifs.addAll(GIF_ASSET_LIST);
         }
         adapter = new InnerAdapter(gifs);
         listView = (ListView) findViewById(R.id.list);
@@ -68,7 +76,6 @@ public class GifListTestActivity extends BaseActivity {
 
             }
         });
-
     }
 
     @Override
@@ -110,14 +117,15 @@ public class GifListTestActivity extends BaseActivity {
             String url = (String) getItem(position);
 
 //            Glide
-            ImageView imageView = (ImageView) convertView.findViewById(R.id.image);
-            Glide.with(GifListTestActivity.this)
-                    .load(url)
-                    .asGif()
-                    .dontAnimate()
-                    .placeholder(R.mipmap.placeholder)
-                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                    .into(imageView);
+//            ImageView imageView = (ImageView) convertView.findViewById(R.id.image);
+//            Glide.with(GifListTestActivity.this)
+//                    .load(url) // from http
+//                    .load(assetUrl(url)) // from assets
+//                    .asGif()
+//                    .dontAnimate()
+//                    .placeholder(R.mipmap.placeholder)
+//                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+//                    .into(imageView);
 
 //            Fresco
 //            SimpleDraweeView draweeView = (SimpleDraweeView) convertView.findViewById(R.id.simple_drawee);
@@ -133,9 +141,29 @@ public class GifListTestActivity extends BaseActivity {
 //            webView.getSettings().setJavaScriptEnabled(true);
 //            webView.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
 //            webView.clearCache(false);
-//            webView.loadUrl(url);
+//            webView.loadUrl(assetUrl(url));
+
+//            Gif ImageView
+            GifImageView gifImageView = (GifImageView) convertView.findViewById(R.id.gif_image);
+//            if (gifImageView.getDrawable() instanceof GifDrawable) {
+//                GifDrawable gifDrawable = (GifDrawable) gifImageView.getDrawable();
+//                if (gifDrawable.isRunning()) {
+//                    gifDrawable.stop();
+//                }
+//            }
+            gifImageView.setImageDrawable(null);
+            try {
+                GifDrawable curGifDrawable = new GifDrawable(GifListTestActivity.this.getAssets(), url);
+                gifImageView.setImageDrawable(curGifDrawable);
+            } catch (IOException e) {
+                Log.e("GIF", e.toString());
+            }
 
             return convertView;
         }
+    }
+
+    private static String assetUrl(String url) {
+        return "file:///android_asset/" + url;
     }
 }

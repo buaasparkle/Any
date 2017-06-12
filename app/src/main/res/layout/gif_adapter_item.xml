@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scaleType="center"
-        android:visibility="visible" />
+        android:visibility="gone" />
 
     <WebView
         android:id="@+id/web"
@@ -24,5 +24,11 @@
         android:layout_height="200dp"
         android:visibility="gone"
         fresco:placeholderImage="@mipmap/placeholder" />
+
+    <pl.droidsonroids.gif.GifImageView
+        android:id="@+id/gif_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible" />
 
 </FrameLayout>
