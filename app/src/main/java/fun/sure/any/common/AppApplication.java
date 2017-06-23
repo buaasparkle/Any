@@ -14,5 +14,6 @@ public class AppApplication extends Application {
     public void onCreate() {
         super.onCreate();
         Fresco.initialize(this);
+        AppHelper.getInstance().init(this);
     }
 }

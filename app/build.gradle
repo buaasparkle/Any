@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.3"
+    compileSdkVersion project.compileSdkVersion.toInteger()
+    buildToolsVersion project.buildToolsVersion
 
     defaultConfig {
         applicationId "fun.sure.any"
-        minSdkVersion 14
-        targetSdkVersion 23
+        minSdkVersion project.minSdkVersion
+        targetSdkVersion project.targetSdkVersion
         versionCode 1
         versionName "1.0"
 
@@ -30,4 +30,8 @@ dependencies {
     compile 'com.android.support:support-v4:23.4.0'
     compile 'pl.droidsonroids.gif:android-gif-drawable:1.2.7'
     compile 'com.facebook.fresco:fresco:1.3.0'
+
+    // ubb
+//    compile "com.yuantiku.android.common:ytk-common-ubb:1.0.23"
+    compile project(':ytk-common-ubb')
 }

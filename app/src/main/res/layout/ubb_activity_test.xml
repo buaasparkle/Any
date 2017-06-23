@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.yuantiku.android.common.ubb.view.UbbScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:Any="http://schemas.android.com/apk/res-auto"
+    style="@style/YtkUiScrollView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.yuantiku.android.common.ubb.view.UbbView
+            android:id="@+id/ubb"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/margin_10"
+            android:paddingLeft="@dimen/ytkubb_margin_h"
+            android:paddingRight="@dimen/ytkubb_margin_h"
+            android:paddingTop="@dimen/margin_10"
+            Any:ytkubbTextColorId="@color/ytkubb_text_000"
+            Any:ytkubbTextSize="@dimen/text_any" />
+
+    </LinearLayout>
+
+</com.yuantiku.android.common.ubb.view.UbbScrollView>

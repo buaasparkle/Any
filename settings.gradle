@@ -1,1 +1,13 @@
 include ':app'
+
+def commonSubmodules = [
+        ':ytk-common-ubb',
+] as String[]
+
+include commonSubmodules
+def commonRoot = "/Users/pc/Develop/git/ytk-common/"
+commonSubmodules.each {
+    String modulePath = commonRoot + it.replace(":", "/")
+    project(it).projectDir = new File(modulePath)
+}
+
