@@ -8,6 +8,8 @@ import org.json.JSONObject;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by wangshuo on 6/23/17.
@@ -54,5 +56,40 @@ class UbbConverter {
 
     private static String closingTag(String tag) {
         return excludeTags.contains(tag) ? "" :"[/" + tag + "]";
+    }
+
+    final static Pattern PATTERN_TEX = Pattern.compile("(.*)\\?widthRatio=(.*)?&heightRatio=(.*)");
+
+    private static String texTag(String value) {
+        final String TAG = "[tex]";
+        Matcher matcher = PATTERN_TEX.matcher(value);
+        if (matcher.find()) {
+            String texValue = matcher.group(1);
+            float width = Float.valueOf(matcher.group(2));
+            float height = Float.valueOf(matcher.group(3));
+            return "[tex=" + width + "x" + height + "]" + texValue;
+        }
+        return TAG;
+    }
+
+    private final static Pattern PATTERN_IMG = Pattern.compile("(.*)\\?width=(.*)?&height=(.*)");
+
+    private static String imgTag(String value) {
+        final String TAG = "[img]";
+        Matcher matcher = PATTERN_IMG.matcher(value);
+        if (matcher.find()) {
+            String texValue = matcher.group(1);
+            int width = Integer.valueOf(matcher.group(2));
+            int height = Integer.valueOf(matcher.group(3));
+            return "[img=" + width + "x" + height + "]" + texValue;
+        }
+        return TAG;
+    }
+
+    public static void main(String[] args) {
+        final String TEX_STRING = "uswT/CEcOIwMpCvTz/zeaA==?widthRatio=0.929&heightRatio=1.286";
+        final String IMG_STRING = "1552ba097ece8c9.svg?width=223&height=269";
+        System.out.print(UbbConverter.imgTag(IMG_STRING));
+
     }
 }

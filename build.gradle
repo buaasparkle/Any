@@ -27,7 +27,6 @@ allprojects {
 
     configurations.all {
         resolutionStrategy {
-//            cacheChangingModulesFor 0, 'seconds'
             dependencySubstitution {
                 substitute module("com.yuantiku.android.common:ytk-common-ubb") with project(':ytk-common-ubb')
             }
