@@ -22,6 +22,11 @@
             Any:ytkubbTextColorId="@color/ytkubb_text_000"
             Any:ytkubbTextSize="@dimen/text_any" />
 
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/layer_image_placeholder"/>
+
     </LinearLayout>
 
 </com.yuantiku.android.common.ubb.view.UbbScrollView>
