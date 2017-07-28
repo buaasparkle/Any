@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import fun.sure.any.gif.GifListTestActivity;
 import fun.sure.any.keyboard.KeyboardTestActivity;
+import fun.sure.any.svg.SvgTestActivity;
 import fun.sure.any.ubb.UbbTestActivity;
 import fun.sure.any.vector.VectorTestActivity;
 
@@ -15,7 +16,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        toUbbTest();
+        toSvgTest();
     }
 
     private void toKeyboardTest() {
@@ -37,6 +38,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void toUbbTest() {
         Intent intent = new Intent(this, UbbTestActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    private void toSvgTest() {
+        Intent intent = new Intent(this, SvgTestActivity.class);
         startActivity(intent);
         finish();
     }

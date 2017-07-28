@@ -37,6 +37,10 @@
         <activity
             android:name=".ubb.UbbTestActivity"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
+
+        <activity
+            android:name=".svg.SvgTestActivity"
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
     </application>
 
 </manifest>

@@ -34,4 +34,7 @@ dependencies {
     // ubb
 //    compile "com.yuantiku.android.common:ytk-common-ubb:1.0.23"
     compile project(':ytk-common-ubb')
+
+    // svg
+    compile 'com.yuantiku.android.common:androidsvg:1.2.1'
 }
