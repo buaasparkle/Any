@@ -41,6 +41,10 @@
         <activity
             android:name=".svg.SvgTestActivity"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
+
+        <activity
+            android:name=".textsize.TextSizeTestActivity"
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
     </application>
 
 </manifest>

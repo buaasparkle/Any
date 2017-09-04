@@ -7,6 +7,7 @@ import android.os.Bundle;
 import fun.sure.any.gif.GifListTestActivity;
 import fun.sure.any.keyboard.KeyboardTestActivity;
 import fun.sure.any.svg.SvgTestActivity;
+import fun.sure.any.textsize.TextSizeTestActivity;
 import fun.sure.any.ubb.UbbTestActivity;
 import fun.sure.any.vector.VectorTestActivity;
 
@@ -16,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        toSvgTest();
+        toTextSizeTest();
     }
 
     private void toKeyboardTest() {
@@ -44,6 +45,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void toSvgTest() {
         Intent intent = new Intent(this, SvgTestActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    private void toTextSizeTest() {
+        Intent intent = new Intent(this, TextSizeTestActivity.class);
         startActivity(intent);
         finish();
     }
