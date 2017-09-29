@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import fun.sure.any.gif.GifListTestActivity;
 import fun.sure.any.keyboard.KeyboardTestActivity;
+import fun.sure.any.notificationpolicy.NotificationPolicyTestActivity;
 import fun.sure.any.svg.SvgTestActivity;
 import fun.sure.any.textsize.TextSizeTestActivity;
 import fun.sure.any.ubb.UbbTestActivity;
@@ -17,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        toTextSizeTest();
+        toNotificationPolicyTest();
     }
 
     private void toKeyboardTest() {
@@ -51,6 +52,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void toTextSizeTest() {
         Intent intent = new Intent(this, TextSizeTestActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    private void toNotificationPolicyTest() {
+        Intent intent = new Intent(this, NotificationPolicyTestActivity.class);
         startActivity(intent);
         finish();
     }
