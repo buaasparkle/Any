@@ -11,6 +11,7 @@ import fun.sure.any.svg.SvgTestActivity;
 import fun.sure.any.textsize.TextSizeTestActivity;
 import fun.sure.any.ubb.UbbTestActivity;
 import fun.sure.any.vector.VectorTestActivity;
+import fun.sure.any.websocket.WebSocketTestActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -18,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        toNotificationPolicyTest();
+        toWebsocketTest();
     }
 
     private void toKeyboardTest() {
@@ -58,6 +59,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void toNotificationPolicyTest() {
         Intent intent = new Intent(this, NotificationPolicyTestActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    private void toWebsocketTest() {
+        Intent intent = new Intent(this, WebSocketTestActivity.class);
         startActivity(intent);
         finish();
     }

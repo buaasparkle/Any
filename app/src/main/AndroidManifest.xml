@@ -48,6 +48,10 @@
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
 
         <activity
+            android:name=".websocket.WebSocketTestActivity"
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
+
+        <activity
             android:name=".notificationpolicy.NotificationPolicyTestActivity"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
 

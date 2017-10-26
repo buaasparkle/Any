@@ -37,4 +37,8 @@ dependencies {
 
     // svg
     compile 'com.yuantiku.android.common:androidsvg:1.2.1'
+
+    // websocket
+    compile 'com.squareup.okhttp3:okhttp-ws:3.4.1'
+    compile 'com.squareup.okhttp3:okhttp-urlconnection:3.3.0'
 }
