@@ -10,7 +10,10 @@
     tools:context="fun.sure.any.MainActivity">
 
     <TextView
+        android:id="@+id/action"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:layout_centerInParent="true"
+        android:textSize="30sp"
+        android:text="action" />
 </RelativeLayout>

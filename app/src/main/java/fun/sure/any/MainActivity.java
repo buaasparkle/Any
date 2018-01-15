@@ -3,6 +3,8 @@ package fun.sure.any;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
 
 import fun.sure.any.gif.GifListTestActivity;
 import fun.sure.any.keyboard.KeyboardTestActivity;
@@ -12,6 +14,7 @@ import fun.sure.any.textsize.TextSizeTestActivity;
 import fun.sure.any.ubb.UbbTestActivity;
 import fun.sure.any.vector.VectorTestActivity;
 import fun.sure.any.websocket.WebSocketTestActivity;
+import fun.sure.any.webview.WebViewTestActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -19,7 +22,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        toWebsocketTest();
+        findViewById(R.id.action).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toWebViewTest();
+            }
+        });
     }
 
     private void toKeyboardTest() {
@@ -67,5 +75,10 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, WebSocketTestActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    private void toWebViewTest() {
+        Intent intent = new Intent(this, WebViewTestActivity.class);
+        startActivity(intent);
     }
 }

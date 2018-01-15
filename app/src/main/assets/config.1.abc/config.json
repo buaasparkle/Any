@@ -1,0 +1,81 @@
+{
+    "title": {
+        "type": "text",
+        "img": {
+            "imgName": "title.png",
+            "positionTop": "10%",
+            "positionLeft": "10%",
+            "scale": 1
+        },
+        "text": {
+            "content": "Which one is a duck ?",
+            "positionTop": "10%",
+            "positionLeft": "10%",
+            "fontSize": 20,
+            "styles": {
+                "color": "#666",
+                "font-family": "'Times New Roman', 'sans-serif'"
+            }
+        }
+    },
+    "options": [
+        {
+            "imgName": "optionA.gif",
+            "positionTop": "10%",
+            "positionLeft": "60%",
+            "scale": 0.4
+        },
+        {
+            "imgName": "optionB.gif",
+            "positionTop": "30%",
+            "positionLeft": "60%",
+            "scale": 0.4,
+            "translateX": "-20%",
+            "translateY": "-15%"
+        },
+        {
+            "imgName": "optionC.gif",
+            "positionTop": "50%",
+            "positionLeft": "60%",
+            "scale": 0.4
+        },
+        {
+            "imgName": "optionD.gif",
+            "positionTop": "70%",
+            "positionLeft": "60%",
+            "scale": 0.4
+        },
+        {
+            "imgName": "optionE.gif",
+            "positionTop": "10%",
+            "positionLeft": "80%",
+            "scale": 0.4
+        },
+        {
+            "imgName": "optionF.gif",
+            "positionTop": "30%",
+            "positionLeft": "80%",
+            "scale": 0.4
+        },
+        {
+            "imgName": "optionG.gif",
+            "positionTop": "50%",
+            "positionLeft": "80%",
+            "scale": 0.4
+        },
+        {
+            "imgName": "optionH.gif",
+            "positionTop": "70%",
+            "positionLeft": "80%",
+            "scale": 0.4
+        }
+    ],
+    "answer": {
+        "backgroundImgName": "answerBg.png",
+        "scale": 1,
+        "correctOptionIndex": 1,
+        "positionTop": "35%",
+        "positionLeft": "10%"
+    },
+    "backgroundImgName": "bg.png"
+}

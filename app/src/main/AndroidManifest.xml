@@ -52,6 +52,10 @@
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
 
         <activity
+            android:name=".webview.WebViewTestActivity"
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
+
+        <activity
             android:name=".notificationpolicy.NotificationPolicyTestActivity"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
 
