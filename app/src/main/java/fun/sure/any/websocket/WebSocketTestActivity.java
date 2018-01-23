@@ -49,6 +49,12 @@ public class WebSocketTestActivity extends BaseActivity implements OnClickListen
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        LarkClient.getInstance().release();
+    }
+
+    @Override
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.start) {

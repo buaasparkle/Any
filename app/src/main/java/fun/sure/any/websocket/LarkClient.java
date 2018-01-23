@@ -2,18 +2,16 @@ package fun.sure.any.websocket;
 
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.os.Looper;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.yuantiku.android.common.util.UnitUtils;
-
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 import fun.sure.any.common.data.Action0;
@@ -40,8 +38,9 @@ public class LarkClient {
     private enum StatusCode {
 
         FAILURE(4000, "web socket connect onFailure"), // 建立 web socket 连接时失败
-        SEND_MSG_EXCEPTION(4001, "send message throws IO exception"), // 发送数据时出现异常
-        INACTIVE_TIME_OUT(4002, "inactive more than 5 minutes"), // 长时间处于非激活状态
+        CLOSE(4001, "web socket connect onClose"), // websocket.close 之后 触发的回调
+        SEND_MSG_EXCEPTION(4002, "send message throws IO exception"), // 发送数据时出现异常
+        INACTIVE_TIME_OUT(4003, "inactive more than 5 minutes"), // 长时间处于非激活状态
         ;
 
         int code;
@@ -78,22 +77,112 @@ public class LarkClient {
     private boolean isConnected;
 
     private Queue<Action0> pendingQueue;
-    private List<Action0> retryActionList;
 
     private HandlerThread handlerThread;
-    private Handler handler;
+    private WorkHandler handler;
+
+    //region work handler
+
+    private class WorkHandler extends Handler {
+
+        private static final int MSG_INIT = 0;
+        private static final int MSG_CLOSE = MSG_INIT + 1;
+        private static final int MSG_DATA = MSG_CLOSE + 1;
+        private static final int MSG_ON_OPEN = MSG_DATA + 1;
+
+        WorkHandler(Looper looper) {
+            super(looper);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case MSG_INIT:
+                    init();
+                    break;
+
+                case MSG_CLOSE:
+                    StatusCode statusCode = (StatusCode) msg.obj;
+                    close(statusCode);
+                    break;
+
+                case MSG_DATA:
+                    if (msg.obj instanceof String) {
+                        sendData((String) msg.obj);
+                    }
+                    break;
+
+                case MSG_ON_OPEN:
+                    if (msg.obj instanceof WebSocket) {
+                        onWebSocketOpen((WebSocket) msg.obj);
+                    }
+                    break;
+            }
+        }
+    }
+
+    private void sendInitMsg() {
+        Message message = handler.obtainMessage();
+        message.what = WorkHandler.MSG_INIT;
+        handler.sendMessage(message);
+    }
+
+    private void sendCloseMsg(StatusCode statusCode) {
+        Message message = handler.obtainMessage();
+        message.what = WorkHandler.MSG_CLOSE;
+        message.obj = statusCode;
+        handler.sendMessage(message);
+    }
+
+    private void sendDataMsg(String data) {
+        Message message = handler.obtainMessage();
+        message.what = WorkHandler.MSG_DATA;
+        message.obj = data;
+        handler.sendMessage(message);
+    }
+
+    private void sendOnOpenMsg(WebSocket webSocket) {
+        Message message = handler.obtainMessage();
+        message.what = WorkHandler.MSG_ON_OPEN;
+        message.obj = webSocket;
+        handler.sendMessage(message);
+    }
+
+    //endregion
 
     private LarkClient() {
+        startHandlerThread();
+        sendInitMsg();
+    }
+
+    public void release() {
+        closeHandlerThread();
+        instance = null;
+    }
+
+    private void startHandlerThread() {
+        closeHandlerThread();
+        handlerThread = new HandlerThread("LarkClientThread");
+        handlerThread.start();
+        handler = new WorkHandler(handlerThread.getLooper());
+    }
+
+    private void closeHandlerThread() {
+        if (handlerThread != null) {
+            handlerThread.quit();
+            handlerThread = null;
+        }
+    }
+
+    private void init() {
+        logThread("init");
         isConnected = false;
         isConnecting = false;
 
-        pendingQueue = new LinkedBlockingQueue<>();
-        retryActionList = new ArrayList<>();
-
-        start(null);
+        pendingQueue = new LinkedList<>();
     }
 
-    public void start(final Action0 connectedCallback) {
+    private void start(final Action0 connectedCallback) {
         logThread("start");
         if (connectedCallback != null) {
             pendingQueue.add(connectedCallback);
@@ -120,14 +209,14 @@ public class LarkClient {
                 // DO NOT use this callback to write to the web socket.
                 // Start a new thread or use another thread in your application.
                 logThread("onOpen");
-                onWebSocketOpen(webSocket);
+                sendOnOpenMsg(webSocket);
             }
 
             @Override
             public void onFailure(IOException e, Response response) {
                 Log.d(TAG, Log.getStackTraceString(e));
                 logThread("onFailure");
-                close(StatusCode.FAILURE);
+                sendCloseMsg(StatusCode.FAILURE);
             }
 
             @Override
@@ -144,10 +233,7 @@ public class LarkClient {
             @Override
             public void onClose(int code, String reason) {
                 logThread("onClose");
-                isConnecting = false;
-                isConnected = false;
-                retryActionList.addAll(pendingQueue);
-                pendingQueue.clear();
+                sendCloseMsg(StatusCode.CLOSE);
             }
         });
         resetAutoCloseMonitor();
@@ -158,57 +244,25 @@ public class LarkClient {
     }
 
     private void onWebSocketOpen(final WebSocket webSocket) {
+        logThread("onWebSocketOpen");
         isConnecting = false;
         isConnected = true;
-        this.webSocket = webSocket;
-        startHandlerThread();
-        postAction(new Action0() {
-            @Override
-            public void apply() {
-                sendHeader("header");
-                pendingQueue.addAll(retryActionList);
-                while (!pendingQueue.isEmpty()) {
-                    Action0 callback = pendingQueue.poll();
-                    callback.apply();
-                }
-            }
-        });
-    }
-
-    private void startHandlerThread() {
-        closeHandlerThread();
-        handlerThread = new HandlerThread("LarkClientThread");
-        handlerThread.start();
-        handler = new Handler(handlerThread.getLooper());
-    }
-
-    private void closeHandlerThread() {
-        if (handlerThread != null) {
-            handlerThread.quit();
-            handlerThread = null;
+        LarkClient.this.webSocket = webSocket;
+        sendHeader("header");
+        while (!pendingQueue.isEmpty()) {
+            Action0 callback = pendingQueue.poll();
+            callback.apply();
         }
     }
 
-    private void postAction(final Action0 action) {
-        if (handler != null && action != null) {
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    logThread("postAction");
-                    action.apply();
-                }
-            });
-        }
-    }
-
-    public void sendHeader(String data) {
+    private void sendHeader(String data) {
         logThread("sendHeader");
-        sendData(data);
+        sendDataMsg(data);
     }
 
     public void sendEntry(String data) {
         logThread("sendEntry");
-        sendData(data);
+        sendDataMsg(data);
     }
 
     private void sendData(final String data) {
@@ -221,16 +275,18 @@ public class LarkClient {
             public void apply() {
                 try {
                     logText(data);
+                    logThread("send message");
                     webSocket.sendMessage(RequestBody.create(WebSocket.TEXT, data));
                     lastActiveTime = System.currentTimeMillis();
                 } catch (IOException | IllegalStateException e) {
-                    close(StatusCode.SEND_MSG_EXCEPTION);
+                    sendCloseMsg(StatusCode.SEND_MSG_EXCEPTION);
                 }
             }
         };
 
+        logText("isConnected = " + isConnected);
         if (isConnected) {
-            postAction(sendAction);
+            sendAction.apply();
         } else {
             start(sendAction);
         }
@@ -242,15 +298,19 @@ public class LarkClient {
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                if (System.currentTimeMillis() - lastActiveTime >= 5 * UnitUtils.MINUTE) {
-                    close(StatusCode.INACTIVE_TIME_OUT);
+                if (System.currentTimeMillis() - lastActiveTime >= 5 * 1000) {
+                    logThread("timer run");
+                    sendCloseMsg(StatusCode.INACTIVE_TIME_OUT);
                 }
             }
-        }, 0, 30 * UnitUtils.SECOND);
+        }, 0, 30 * 1000);
     }
 
-    public void close(@NonNull StatusCode statusCode) {
+    private void close(@NonNull StatusCode statusCode) {
         logThread("close");
+        isConnecting = false;
+        isConnected = false;
+
         if (timer != null) {
             timer.cancel();
         }
@@ -265,11 +325,11 @@ public class LarkClient {
                 logText(Log.getStackTraceString(e));
             }
         }
-        closeHandlerThread();
     }
 
     private void logThread(String where) {
-        Log.d(TAG, "[Thread]" + where + " = " + Thread.currentThread().getName());
+        Log.d(TAG, "[Thread]" + where + " , id = " + Thread.currentThread().getId() +
+                ", name = " + Thread.currentThread().getName());
     }
 
     private void logText(String text) {
