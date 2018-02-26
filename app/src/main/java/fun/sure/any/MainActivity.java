@@ -9,6 +9,7 @@ import android.view.View.OnClickListener;
 import fun.sure.any.gif.GifListTestActivity;
 import fun.sure.any.keyboard.KeyboardTestActivity;
 import fun.sure.any.notificationpolicy.NotificationPolicyTestActivity;
+import fun.sure.any.ping.PingTestActivity;
 import fun.sure.any.svg.SvgTestActivity;
 import fun.sure.any.textsize.TextSizeTestActivity;
 import fun.sure.any.thread.ThreadTestActivity;
@@ -26,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.action).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                toThreadTest();
+                toPingTest();
             }
         });
     }
@@ -85,6 +86,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void toThreadTest() {
         Intent intent = new Intent(this, ThreadTestActivity.class);
+        startActivity(intent);
+    }
+
+    private void toPingTest() {
+        Intent intent = new Intent(this, PingTestActivity.class);
         startActivity(intent);
     }
 }
