@@ -9,6 +9,7 @@ import android.view.View.OnClickListener;
 import fun.sure.any.gif.GifListTestActivity;
 import fun.sure.any.keyboard.KeyboardTestActivity;
 import fun.sure.any.notificationpolicy.NotificationPolicyTestActivity;
+import fun.sure.any.patheffect.PathEffectTestActivity;
 import fun.sure.any.ping.PingTestActivity;
 import fun.sure.any.svg.SvgTestActivity;
 import fun.sure.any.textsize.TextSizeTestActivity;
@@ -27,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.action).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                toPingTest();
+                toPathEffectTest();
             }
         });
     }
@@ -91,6 +92,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void toPingTest() {
         Intent intent = new Intent(this, PingTestActivity.class);
+        startActivity(intent);
+    }
+
+    private void toPathEffectTest() {
+        Intent intent = new Intent(this, PathEffectTestActivity.class);
         startActivity(intent);
     }
 }
